@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --md-sys-color-primary: #6750A4;
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-primary-container: #EADDFF;
+      --md-sys-color-on-primary-container: #21005D;
+      --md-sys-color-secondary: #625B71;
+      --md-sys-color-on-secondary: #FFFFFF;
+      --md-sys-color-secondary-container: #E8DEF8;
+      --md-sys-color-on-secondary-container: #1D192B;
+      --md-sys-color-tertiary: #7D5260;
+      --md-sys-color-on-tertiary: #FFFFFF;
+      --md-sys-color-surface: #FEF7FF;
+      --md-sys-color-on-surface: #1D1B20;
+      --md-sys-color-surface-variant: #E7E0EC;
+      --md-sys-color-on-surface-variant: #49454F;
+      --md-sys-color-outline: #79747E;
+      --md-sys-color-error: #B3261E;
+      --md-sys-color-on-error: #FFFFFF;
+      --md-sys-color-error-container: #F9DEDC;
+      --md-sys-color-on-error-container: #410E0B;
+    }
+    
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 16px;
+      background: var(--md-sys-color-surface);
+      min-height: 100vh;
+    }
+    
+    .container {
+      background: var(--md-sys-color-surface);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+      max-width: 100%;
+    }
+    
+    h1 {
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 4px;
+      color: var(--md-sys-color-on-surface);
+      letter-spacing: 0;
+      line-height: 28px;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-bottom: 24px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.25px;
+    }
+    
+    .upload-area {
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+      margin-bottom: 16px;
+    }
+        
+    .upload-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      margin-bottom: 4px;
+      letter-spacing: 0.1px;
+    }
+    
+    .upload-subtext {
+      font-size: 12px;
+      color: var(--md-sys-color-on-surface-variant);
+      letter-spacing: 0.4px;
+    }
+    
+    input[type="file"] {
+      display: none;
+    }
+    
+    .status {
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+      letter-spacing: 0.25px;
+      line-height: 20px;
+    }
+    
+    .status.success {
+      background: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+    
+    .status.error {
+      background: var(--md-sys-color-error-container);
+      color: var(--md-sys-color-on-error-container);
+    }
+    
+    .status.show {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .status-icon {
+      font-size: 20px;
+    }
+    
+    .card {
+      background: var(--md-sys-color-surface-variant);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    
+    .card.show {
+      display: block;
+    }
+    
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      margin-bottom: 8px;
+      letter-spacing: 0.1px;
+    }
+    
+    .card-content {
+      font-size: 14px;
+      color: var(--md-sys-color-on-surface-variant);
+      letter-spacing: 0.25px;
+      line-height: 20px;
+    }
+    
+    .preview {
+      margin-bottom: 16px;
+      display: none;
+    }
+    
+    .preview.show {
+      display: block;
+    }
+    
+    .preview-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: var(--md-sys-color-on-surface);
+      letter-spacing: 0.1px;
+    }
+    
+    .preview-content {
+      background: var(--md-sys-color-surface-variant);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--md-sys-color-on-surface-variant);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      letter-spacing: 0.25px;
+    }
+    
+    .preview-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .preview-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .preview-content::-webkit-scrollbar-thumb {
+      background: var(--md-sys-color-outline);
+      border-radius: 4px;
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 12px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+      letter-spacing: 0.1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+    }
+    
+    button:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    
+    button:hover:not(:disabled) {
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+    }
+    
+    button:active:not(:disabled) {
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-primary {
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      background: #7965AF;
+    }
+    
+    .btn-secondary {
+      background: var(--md-sys-color-secondary);
+      color: var(--md-sys-color-on-secondary);
+    }
+    
+    .btn-secondary:hover:not(:disabled) {
+      background: #706A7C;
+    }
+    
+    .material-icons {
+      font-size: 18px;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .divider {
+      height: 1px;
+      background: var(--md-sys-color-outline);
+      margin: 24px 0;
+      opacity: 0.12;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Figma Word to PDF</h1>
+    <p class="subtitle">Upload a Word document to extract and add to Figma</p>
+    
+    <label for="fileInput" class="upload-area" id="uploadArea">
+      <div class="upload-text">Click to upload Word document</div>
+      <div class="upload-subtext">.docx files only</div>
+    </label>
+    <input type="file" id="fileInput" accept=".docx">
+    
+    <div class="status" id="status">
+      <span class="material-icons status-icon" id="statusIcon"></span>
+      <span id="statusText"></span>
+    </div>
+    
+    <div class="card" id="fileInfo">
+      <div class="card-title" id="fileName"></div>
+      <div class="card-content" id="fileSize"></div>
+    </div>
+    
+    <div class="preview" id="preview">
+      <div class="preview-title">Content Preview</div>
+      <div class="preview-content" id="previewContent"></div>
+    </div>
+    
+    <div class="buttons">
+      <button class="btn-primary" id="addToFigma" disabled>
+        <span class="material-icons">add</span>
+        <span>Add to Figma</span>
+      </button>
+      <button class="btn-secondary" id="exportPDF" disabled>
+        <span class="material-icons">download</span>
+        <span>Export PDF</span>
+      </button>
+    </div>
+  </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    let docContent = '';
+    let currentFileName = '';
+    
+    const fileInput = document.getElementById('fileInput');
+    const status = document.getElementById('status');
+    const statusIcon = document.getElementById('statusIcon');
+    const statusText = document.getElementById('statusText');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const preview = document.getElementById('preview');
+    const previewContent = document.getElementById('previewContent');
+    const addToFigmaBtn = document.getElementById('addToFigma');
+    const exportPDFBtn = document.getElementById('exportPDF');
+    
+    function showStatus(message, type) {
+      statusText.textContent = message;
+      statusIcon.textContent = type === 'success' ? 'check_circle' : 'error';
+      status.className = `status ${type} show`;
+    }
+    
+    function hideStatus() {
+      status.className = 'status';
+    }
+    
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      if (!file.name.endsWith('.docx')) {
+        showStatus('Please upload a .docx file', 'error');
+        return;
+      }
+      
+      currentFileName = file.name;
+      showStatus('Processing Word document...', 'success');
+      
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        
+        const mammothLib = window.mammoth || mammoth;
+        const result = await mammothLib.extractRawText({ arrayBuffer });
+        
+        docContent = result.value;
+        
+        fileName.textContent = file.name;
+        fileSize.textContent = `${docContent.length} characters`;
+        fileInfo.classList.add('show');
+        
+        previewContent.textContent = docContent.substring(0, 500) + (docContent.length > 500 ? '...' : '');
+        preview.classList.add('show');
+        
+        addToFigmaBtn.disabled = false;
+        exportPDFBtn.disabled = false;
+        
+        showStatus('Document loaded successfully!', 'success');
+        
+      } catch (error) {
+        showStatus(`Error: ${error.message}`, 'error');
+        console.error(error);
+      }
+    });
+    
+    addToFigmaBtn.addEventListener('click', () => {
+      if (!docContent) return;
+      
+      addToFigmaBtn.innerHTML = '<span class="spinner"></span><span>Adding...</span>';
+      addToFigmaBtn.disabled = true;
+      
+      parent.postMessage({
+        pluginMessage: {
+          type: 'create-text',
+          content: docContent
+        }
+      }, '*');
+    });
+    
+    exportPDFBtn.addEventListener('click', async () => {
+      exportPDFBtn.innerHTML = '<span class="spinner"></span><span>Exporting...</span>';
+      exportPDFBtn.disabled = true;
+      
+      parent.postMessage({
+        pluginMessage: {
+          type: 'export-pdf'
+        }
+      }, '*');
+    });
+    
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      if (!msg) return;
+      
+      if (msg.type === 'text-created') {
+        if (msg.success) {
+          showStatus(msg.message, 'success');
+          addToFigmaBtn.innerHTML = '<span class="material-icons">add</span><span>Add to Figma</span>';
+          addToFigmaBtn.disabled = false;
+        }
+      } else if (msg.type === 'export-pdf-data') {
+        generatePDFFromFigma(msg.content);
+      } else if (msg.type === 'export-pdf-error') {
+        showStatus(msg.message, 'error');
+        exportPDFBtn.innerHTML = '<span class="material-icons">download</span><span>Export PDF</span>';
+        exportPDFBtn.disabled = false;
+      } else if (msg.type === 'error') {
+        showStatus(`Error: ${msg.message}`, 'error');
+        addToFigmaBtn.innerHTML = '<span class="material-icons">add</span><span>Add to Figma</span>';
+        addToFigmaBtn.disabled = false;
+      }
+    };
+    
+    async function generatePDFFromFigma(figmaContent) {
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(16);
+        doc.text('Figma Export', 20, 20);
+        
+        let yPosition = 40;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margins = 20;
+        const maxLineWidth = pageWidth - (margins * 2);
+        
+        figmaContent.forEach((item, index) => {
+          const pdfFontSize = Math.min(item.fontSize / 2, 16);
+          doc.setFontSize(pdfFontSize);
+          
+          const lines = doc.splitTextToSize(item.text, maxLineWidth);
+          
+          const textHeight = lines.length * (pdfFontSize * 0.35);
+          if (yPosition + textHeight > pageHeight - margins) {
+            doc.addPage();
+            yPosition = margins;
+          }
+          
+          doc.text(lines, margins, yPosition);
+          yPosition += textHeight + 10;
+        });
+        
+        const pdfFileName = currentFileName.replace('.docx', '_figma.pdf') || 'figma_export.pdf';
+        doc.save(pdfFileName);
+        
+        showStatus(`PDF exported as ${pdfFileName}`, 'success');
+        
+      } catch (error) {
+        showStatus(`Error exporting PDF: ${error.message}`, 'error');
+        console.error(error);
+      } finally {
+        exportPDFBtn.innerHTML = '<span class="material-icons">download</span><span>Export PDF</span>';
+        exportPDFBtn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
